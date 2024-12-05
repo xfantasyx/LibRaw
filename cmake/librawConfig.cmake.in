@@ -1,0 +1,49 @@
+include(CMakeFindDependencyMacro)
+
+if(@JASPER_FOUND@)
+    find_dependency(Jasper)
+endif()
+
+#if(@JPEG8_FOUND@)
+#    find_dependency(@JPEG_LIB@)
+#endif()
+#if(@ZLIB_FOUND@)
+#    find_dependency(@ZLIB_LIBRARIES@)
+#endif()
+
+if(@LCMS_SUPPORT_CAN_BE_COMPILED@)
+    if(@LCMS2_FOUND@)
+        find_dependency(LCMS2)
+    elseif(@LCMS_FOUND@)
+        find_dependency(LCMS)
+    endif()
+endif()
+
+if(@ENABLE_RAWSPEED@)
+    find_dependency(LibXml2)
+    find_dependency(Threads)
+endif()
+
+if(@ENABLE_OPENMP@)
+    find_dependency(OpenMP)
+endif()
+
+
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+check_required_components("@PROJECT_NAME@")
+
+SET(LibRaw_VERSION_STRING "@RAW_LIB_VERSION_STRING@")
+
+get_target_property(LibRaw_INCLUDE_DIR libraw::raw INTERFACE_INCLUDE_DIRECTORIES)
+
+if(TARGET libraw::raw)
+   set(LibRaw_LIBRARIES libraw::raw)
+endif()
+
+if(TARGET libraw::raw_r)
+   set(LibRaw_r_LIBRARIES libraw::raw_r)
+endif()
+
+set(LIBRAW_FOUND TRUE)
